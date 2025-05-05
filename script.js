@@ -50,8 +50,6 @@ randomiseEnemies();
 randomiseEnemies(); 
 
 
-
-
 //Populates the maze in the HTML
 for (let y of maze) {
     for (let x of y) {
@@ -81,8 +79,36 @@ for (let y of maze) {
     }
 }
 
-//Randomise enemy positions
+//Random movement of the enemies
+const enemies = document.querySelectorAll('.enemy');
+enemies.forEach(moveEnemy);
 
+function moveEnemy(enemy) {
+    let enemyTop = 0;
+    let enemyLeft = 0;
+    let enemyDirection = Math.ceil(Math.random() * 4); 
+
+    setInterval(function () {
+         // Stop enemy movemenet before and after the game
+        if (!startButtonClicked || gameOver) return;
+
+        if (enemyDirection==1){
+            enemyTop++;
+        }
+        if (enemyDirection==2){
+            enemyTop--;
+        }
+        if (enemyDirection==3){
+            enemyLeft--;
+        }
+        if (enemyDirection==4){
+            enemyLeft++;
+        }
+        enemy.style.top = enemyTop + 'px';
+        enemy.style.left = enemyLeft + 'px';
+
+    },10)
+}
 
 //Player movement
 function keyUp(event) {
@@ -119,6 +145,7 @@ const scoreDisplay = document.querySelector('.score p');
 const gameOverMessage = document.getElementById('gameOverMessage'); //game over message 
 
 setInterval(function () {
+    // Stop player movemenet before and after the game
     if (!startButtonClicked || gameOver) return;  // (Open AI ChatGPT, 2023)
     let playerMoved = false;
 
