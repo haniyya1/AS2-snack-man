@@ -8,6 +8,9 @@ function startButtonFunction() {
 }
 startButton.addEventListener('click', startButtonFunction);
 
+// stopping player movement after game over
+let gameOver = false;
+
 //Maze game variables
 let upPressed = false;
 let downPressed = false;
@@ -19,14 +22,14 @@ const main = document.querySelector('main');
 //Player = 2, Wall = 1, Enemy = 3, Point = 0
 let maze = [
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-    [1, 2, 0, 1, 0, 0, 0, 0, 3, 1],
+    [1, 2, 0, 1, 0, 0, 0, 0, 0, 1],
     [1, 0, 0, 0, 0, 0, 0, 1, 1, 1],
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
     [1, 0, 1, 1, 0, 0, 0, 0, 0, 1],
     [1, 0, 0, 0, 0, 0, 0, 1, 1, 1],
-    [1, 0, 0, 1, 0, 3, 0, 0, 0, 1],
+    [1, 0, 0, 1, 0, 0, 0, 0, 0, 1],
     [1, 0, 0, 0, 0, 0, 0, 1, 0, 1],
-    [1, 3, 1, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 1, 0, 0, 0, 0, 0, 0, 1],
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 ];
 
@@ -58,6 +61,9 @@ for (let y of maze) {
         main.appendChild(block);
     }
 }
+
+//Randomise enemy positions
+
 
 //Player movement
 function keyUp(event) {
@@ -94,7 +100,7 @@ const scoreDisplay = document.querySelector('.score p');
 const gameOverMessage = document.getElementById('gameOverMessage'); //game over message 
 
 setInterval(function () {
-    if (!startButtonClicked) return;
+    if (!startButtonClicked || gameOver) return;  // (Open AI ChatGPT, 2023)
     let playerMoved = false;
 
     //Player movement with collision detection
@@ -193,18 +199,19 @@ setInterval(function () {
             ) {
                 player.classList.add('dead');
                 gameOverMessage.style.display = 'flex'; // game over message
+                gameOver = true;
             }
         }
 
         //check if all points are collected
         if (document.querySelectorAll('.point').length === 0) {
             gameOverMessage.style.display = 'flex'; // game over message
+            gameOver = true;
         }
-
-
-
     }
-}, 10);
+    
+    
+},10);
 
 document.addEventListener('keydown', keyDown);
 document.addEventListener('keyup', keyUp);

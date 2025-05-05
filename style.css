@@ -265,6 +265,7 @@ button:nth-child(4) {
     animation: hitAnimation 1.5s ease-in-out;
 }
 
+/* Game over screen */
 .gameOver {
     display: none;
     position: absolute;
