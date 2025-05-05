@@ -33,6 +33,25 @@ let maze = [
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 ];
 
+//Randomise enemy positions
+function randomiseEnemies() {
+    const row = Math.floor(Math.random()*maze.length);
+    const column = Math.floor(Math.random()* maze[row].length);
+
+    if (maze[row][column] == 0) {
+        maze[row][column] = 3;
+    }
+    else { 
+        randomiseEnemies();
+    }   
+}
+randomiseEnemies();
+randomiseEnemies();
+randomiseEnemies(); 
+
+
+
+
 //Populates the maze in the HTML
 for (let y of maze) {
     for (let x of y) {
