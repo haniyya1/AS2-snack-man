@@ -35,19 +35,19 @@ let maze = [
 
 //Randomise enemy positions
 function randomiseEnemies() {
-    const row = Math.floor(Math.random()*maze.length);
-    const column = Math.floor(Math.random()* maze[row].length);
+    const row = Math.floor(Math.random() * maze.length);
+    const column = Math.floor(Math.random() * maze[row].length);
 
     if (maze[row][column] == 0) {
         maze[row][column] = 3;
     }
-    else { 
+    else {
         randomiseEnemies();
-    }   
+    }
 }
 randomiseEnemies();
 randomiseEnemies();
-randomiseEnemies(); 
+randomiseEnemies();
 
 
 //Populates the maze in the HTML
@@ -86,29 +86,71 @@ enemies.forEach(moveEnemy);
 function moveEnemy(enemy) {
     let enemyTop = 0;
     let enemyLeft = 0;
-    let enemyDirection = Math.ceil(Math.random() * 4); 
+    let enemyDirection = Math.ceil(Math.random() * 4);
 
     setInterval(function () {
-         // Stop enemy movemenet before and after the game
         if (!startButtonClicked || gameOver) return;
 
-        if (enemyDirection==1){
-            enemyTop++;
-        }
-        if (enemyDirection==2){
-            enemyTop--;
-        }
-        if (enemyDirection==3){
-            enemyLeft--;
-        }
-        if (enemyDirection==4){
-            enemyLeft++;
-        }
-        enemy.style.top = enemyTop + 'px';
-        enemy.style.left = enemyLeft + 'px';
+        let canMove = false;
+        let enemyPosition = enemy.getBoundingClientRect();
 
-    },10)
+        switch (enemyDirection) {
+            case 1: // down
+                let newBottom = enemyPosition.bottom + 1;
+                let btmLeft = document.elementFromPoint(enemyPosition.left, newBottom);
+                let btmRight = document.elementFromPoint(enemyPosition.right, newBottom);
+
+                if (btmLeft.classList.contains('wall') == false && btmRight.classList.contains('wall') == false) {
+                    enemyTop++;
+                    canMove = true;
+                }
+                break;
+
+            case 2: // up
+                let newTop = enemyPosition.top - 1;
+                let topLeft = document.elementFromPoint(enemyPosition.left, newTop);
+                let topRight = document.elementFromPoint(enemyPosition.right, newTop);
+
+                if (topLeft.classList.contains('wall') == false && topRight.classList.contains('wall') == false){
+                    enemyTop--;
+                    canMove = true;
+                }
+                break;
+
+            case 3: // left
+                let newLeft = enemyPosition.left - 1;
+                let leftTop = document.elementFromPoint(newLeft, enemyPosition.top);
+                let leftBottom = document.elementFromPoint(newLeft, enemyPosition.bottom);
+
+                if (leftTop.classList.contains('wall') == false && leftBottom.classList.contains('wall') == false) {
+                    enemyLeft--;
+                    canMove = true;
+                }
+                break;
+
+            case 4: // right
+                let newRight = enemyPosition.right + 1;
+                let rightTop = document.elementFromPoint(newRight, enemyPosition.top);
+                let rightBottom = document.elementFromPoint(newRight, enemyPosition.bottom);
+
+                if (rightTop.classList.contains('wall') == false && rightBottom.classList.contains('wall') == false) {
+                    enemyLeft++;
+                    canMove = true;
+                }
+                break;
+        }
+
+        if (canMove) {
+            enemy.style.top = enemyTop + 'px';
+            enemy.style.left = enemyLeft + 'px';
+        } else {
+            // Change direction if stuck
+            enemyDirection = Math.ceil(Math.random() * 4);
+        }
+    }, 10);
 }
+
+
 
 //Player movement
 function keyUp(event) {
@@ -255,9 +297,9 @@ setInterval(function () {
             gameOver = true;
         }
     }
-    
-    
-},10);
+
+
+}, 10);
 
 document.addEventListener('keydown', keyDown);
 document.addEventListener('keyup', keyUp);
