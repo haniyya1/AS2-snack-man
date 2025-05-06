@@ -274,22 +274,6 @@ setInterval(function () {
 
         }
 
-        //check for collision with enemies
-        const enemies = document.querySelectorAll('.enemy');
-        for (let i = 0; i < enemies.length; i++) {
-            let enemy = enemies[i].getBoundingClientRect();
-
-            if (
-                position.right > enemy.left &&
-                position.left < enemy.right &&
-                position.bottom > enemy.top &&
-                position.top < enemy.bottom
-            ) {
-                player.classList.add('dead');
-                gameOverMessage.style.display = 'flex'; // game over message
-                gameOver = true;
-            }
-        }
 
         //check if all points are collected
         if (document.querySelectorAll('.point').length === 0) {
