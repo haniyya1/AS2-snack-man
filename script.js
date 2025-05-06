@@ -88,14 +88,34 @@ function moveEnemy(enemy) {
     let enemyLeft = 0;
     let enemyDirection = Math.ceil(Math.random() * 4);
 
+    // collision detection for enemy
     setInterval(function () {
         if (!startButtonClicked || gameOver) return;
 
         let canMove = false;
         let enemyPosition = enemy.getBoundingClientRect();
 
+        // always checking for collision
+        const position = player.getBoundingClientRect();
+        const enemies = document.querySelectorAll('.enemy');
+        for (let i = 0; i < enemies.length; i++) {
+            let enemy = enemies[i].getBoundingClientRect();
+
+            if (
+                position.right > enemy.left &&
+                position.left < enemy.right &&
+                position.bottom > enemy.top &&
+                position.top < enemy.bottom
+            ) {
+                //dead animation and game over message
+                player.classList.add('dead');
+                gameOverMessage.style.display = 'flex';
+                gameOver = true;
+            }
+        }
+
         switch (enemyDirection) {
-            case 1: // down
+            case 1: //down
                 let newBottom = enemyPosition.bottom + 1;
                 let btmLeft = document.elementFromPoint(enemyPosition.left, newBottom);
                 let btmRight = document.elementFromPoint(enemyPosition.right, newBottom);
@@ -106,18 +126,18 @@ function moveEnemy(enemy) {
                 }
                 break;
 
-            case 2: // up
+            case 2: //up
                 let newTop = enemyPosition.top - 1;
                 let topLeft = document.elementFromPoint(enemyPosition.left, newTop);
                 let topRight = document.elementFromPoint(enemyPosition.right, newTop);
 
-                if (topLeft.classList.contains('wall') == false && topRight.classList.contains('wall') == false){
+                if (topLeft.classList.contains('wall') == false && topRight.classList.contains('wall') == false) {
                     enemyTop--;
                     canMove = true;
                 }
                 break;
 
-            case 3: // left
+            case 3: //left
                 let newLeft = enemyPosition.left - 1;
                 let leftTop = document.elementFromPoint(newLeft, enemyPosition.top);
                 let leftBottom = document.elementFromPoint(newLeft, enemyPosition.bottom);
@@ -128,7 +148,7 @@ function moveEnemy(enemy) {
                 }
                 break;
 
-            case 4: // right
+            case 4: //right
                 let newRight = enemyPosition.right + 1;
                 let rightTop = document.elementFromPoint(newRight, enemyPosition.top);
                 let rightBottom = document.elementFromPoint(newRight, enemyPosition.bottom);
@@ -140,6 +160,7 @@ function moveEnemy(enemy) {
                 break;
         }
 
+        // updating enemy position
         if (canMove) {
             enemy.style.top = enemyTop + 'px';
             enemy.style.left = enemyLeft + 'px';
@@ -149,8 +170,6 @@ function moveEnemy(enemy) {
         }
     }, 10);
 }
-
-
 
 //Player movement
 function keyUp(event) {
@@ -190,6 +209,13 @@ setInterval(function () {
     // Stop player movemenet before and after the game
     if (!startButtonClicked || gameOver) return;  // (Open AI ChatGPT, 2023)
     let playerMoved = false;
+
+
+    // Check if all points are collected
+    if (document.querySelectorAll('.point').length === 0) {
+        gameOverMessage.style.display = 'flex';
+        gameOver = true;
+    }
 
     //Player movement with collision detection
     if (downPressed) {
@@ -250,6 +276,7 @@ setInterval(function () {
             playerMoved = true;
         }
         playerMouth.classList = 'right';
+
     }
 
     //check for collision with points
@@ -271,14 +298,6 @@ setInterval(function () {
                 scoreDisplay.textContent = score;
                 console.log(document.querySelectorAll('.point').length);
             }
-
-        }
-
-
-        //check if all points are collected
-        if (document.querySelectorAll('.point').length === 0) {
-            gameOverMessage.style.display = 'flex'; // game over message
-            gameOver = true;
         }
     }
 
