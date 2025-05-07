@@ -2,11 +2,11 @@
 const startButton = document.getElementById('startButton');
 let startButtonClicked = false;
 
-function startButtonFunction() {
+function startGame() {
     startButton.style.display = 'none';
     startButtonClicked = true;
 }
-startButton.addEventListener('click', startButtonFunction);
+startButton.addEventListener('click', startGame);
 
 // stopping player movement after game over
 let gameOver = false;
@@ -206,7 +206,7 @@ const scoreDisplay = document.querySelector('.score p');
 const gameOverMessage = document.getElementById('gameOverMessage'); //game over message 
 
 setInterval(function () {
-    // Stop player movemenet before and after the game
+    // Stop player movement before and after the game
     if (!startButtonClicked || gameOver) return;  // (Open AI ChatGPT, 2023)
     let playerMoved = false;
 
@@ -300,10 +300,53 @@ setInterval(function () {
             }
         }
     }
-
-
 }, 10);
 
 document.addEventListener('keydown', keyDown);
 document.addEventListener('keyup', keyUp);
 
+//Restarting game
+document.getElementById('restart').addEventListener('click', restartGame);
+
+function restartGame() {
+    main.innerHTML = '';
+    createMaze();
+}
+
+
+// Implementation of button controls
+//left button
+const leftBtn = document.getElementById('lbttn');
+leftBtn.addEventListener('click', function () { // (w3schools, n.d.)
+    leftPressed = true;
+    rightPressed = false;
+    upPressed = false;
+    downPressed = false;
+});
+
+//up button
+const upBtn = document.getElementById('ubttn');
+upBtn.addEventListener('click', function () {
+    upPressed = true;
+    leftPressed = false;
+    rightPressed = false;
+    downPressed = false;
+});
+
+//right button
+const rightBtn = document.getElementById('rbttn');
+rightBtn.addEventListener('click', function () {
+    rightPressed = true;
+    leftPressed = false;
+    upPressed = false;
+    downPressed = false;
+});
+
+//down button
+const downBtn = document.getElementById('dbttn');
+downBtn.addEventListener('click', function () {
+    downPressed = true;
+    leftPressed = false;
+    upPressed = false;
+    rightPressed = false;
+});

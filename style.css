@@ -275,4 +275,27 @@ button:nth-child(4) {
     justify-content: center;
     background-color: rgba(0, 0, 0, 0.8);
     z-index: 100;
+    flex-direction: column;
 }
+
+/*Restart button*/
+#restart {
+    background-color: #ccc;
+    z-index: 100;
+    cursor: pointer;
+    border-radius: 20px;
+    box-shadow: 4px 4px 4px #000;
+    margin-top: 20px;
+    padding: 20px 20px;
+    font-size: 15px;
+    display: flex;
+    height: auto;
+    width: auto;
+    justify-content: center;
+    align-items: center;
+
+}
+
+#restart:hover {
+    background-color: #aaa;
+}   
