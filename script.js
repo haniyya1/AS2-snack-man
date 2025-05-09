@@ -1,5 +1,5 @@
 //Start button
-const startButton = document.getElementById('startButton');
+const startButton = document.querySelector('.start');
 let startButtonClicked = false;
 
 function startGame() {
