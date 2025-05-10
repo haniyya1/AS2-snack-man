@@ -29,8 +29,7 @@ header {
 .startDiv {
     position: absolute;
     display: flex;
-    /*height: 100vh;
-    width: 100vw; */
+    height: 100vh;
     align-items: center;
     justify-content: center;
 }
@@ -298,4 +297,4 @@ button:nth-child(4) {
 
 #restart:hover {
     background-color: #aaa;
-}   
+}

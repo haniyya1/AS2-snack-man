@@ -185,6 +185,12 @@ function keyUp(event) {
 }
 
 function keyDown(event) {
+    // reset all movements
+    upPressed = false;
+    downPressed = false;
+    leftPressed = false;
+    rightPressed = false;
+
     if (event.key === 'ArrowUp') {
         upPressed = true;
     } else if (event.key === 'ArrowDown') {
@@ -196,15 +202,58 @@ function keyDown(event) {
     }
 }
 
+document.addEventListener('keydown', keyDown);
+document.addEventListener('keyup', keyUp);
+
+// Implementation of button controls
+//left button
+const leftBtn = document.getElementById('lbttn');
+leftBtn.addEventListener('click', function () { // (w3schools, n.d.)
+    leftPressed = true;
+    rightPressed = false;
+    upPressed = false;
+    downPressed = false;
+});
+
+//up button
+const upBtn = document.getElementById('ubttn');
+upBtn.addEventListener('click', function () {
+    upPressed = true;
+    leftPressed = false;
+    rightPressed = false;
+    downPressed = false;
+});
+
+//right button
+const rightBtn = document.getElementById('rbttn');
+rightBtn.addEventListener('click', function () {
+    rightPressed = true;
+    leftPressed = false;
+    upPressed = false;
+    downPressed = false;
+});
+
+//down button
+const downBtn = document.getElementById('dbttn');
+downBtn.addEventListener('click', function () {
+    downPressed = true;
+    leftPressed = false;
+    upPressed = false;
+    rightPressed = false;
+});
+
+// player 
 const player = document.querySelector('#player');
 const playerMouth = player.querySelector('.mouth');
 let playerTop = 0;
 let playerLeft = 0;
 
+// score 
 let score = 0;
 const scoreDisplay = document.querySelector('.score p');
 const gameOverMessage = document.getElementById('gameOverMessage'); //game over message 
 
+// collision detection for player
 setInterval(function () {
     // Stop player movement before and after the game
     if (!startButtonClicked || gameOver) return;  // (Open AI ChatGPT, 2023)
@@ -302,8 +351,6 @@ setInterval(function () {
     }
 }, 10);
 
-document.addEventListener('keydown', keyDown);
-document.addEventListener('keyup', keyUp);
 
 //Restarting game
 document.getElementById('restart').addEventListener('click', restartGame);
@@ -311,42 +358,10 @@ document.getElementById('restart').addEventListener('click', restartGame);
 function restartGame() {
     main.innerHTML = '';
     createMaze();
+
+    player = document.querySelector('#player');
+    playerTop = 0;
+    playerLeft = 0;
 }
 
 
-// Implementation of button controls
-//left button
-const leftBtn = document.getElementById('lbttn');
-leftBtn.addEventListener('click', function () { // (w3schools, n.d.)
-    leftPressed = true;
-    rightPressed = false;
-    upPressed = false;
-    downPressed = false;
-});
-
-//up button
-const upBtn = document.getElementById('ubttn');
-upBtn.addEventListener('click', function () {
-    upPressed = true;
-    leftPressed = false;
-    rightPressed = false;
-    downPressed = false;
-});
-
-//right button
-const rightBtn = document.getElementById('rbttn');
-rightBtn.addEventListener('click', function () {
-    rightPressed = true;
-    leftPressed = false;
-    upPressed = false;
-    downPressed = false;
-});
-
-//down button
-const downBtn = document.getElementById('dbttn');
-downBtn.addEventListener('click', function () {
-    downPressed = true;
-    leftPressed = false;
-    upPressed = false;
-    rightPressed = false;
-});
