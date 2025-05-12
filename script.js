@@ -1,6 +1,8 @@
 //Start button
 const startButton = document.querySelector('.start');
 let startButtonClicked = false;
+let enemyTimer = [];
+
 
 function startGame() {
     startButton.style.display = 'none';
@@ -49,35 +51,38 @@ randomiseEnemies();
 randomiseEnemies();
 randomiseEnemies();
 
+function createMaze() {
+    //Populates the maze in the HTML
+    for (let y of maze) {
+        for (let x of y) {
+            let block = document.createElement('div');
+            block.classList.add('block');
 
-//Populates the maze in the HTML
-for (let y of maze) {
-    for (let x of y) {
-        let block = document.createElement('div');
-        block.classList.add('block');
+            switch (x) {
+                case 1:
+                    block.classList.add('wall');
+                    break;
+                case 2:
+                    block.id = 'player';
+                    let mouth = document.createElement('div');
+                    mouth.classList.add('mouth');
+                    block.appendChild(mouth);
+                    break;
+                case 3:
+                    block.classList.add('enemy');
+                    break;
+                default:
+                    block.classList.add('point');
+                    block.style.height = '1vh';
+                    block.style.width = '1vh';
+            }
 
-        switch (x) {
-            case 1:
-                block.classList.add('wall');
-                break;
-            case 2:
-                block.id = 'player';
-                let mouth = document.createElement('div');
-                mouth.classList.add('mouth');
-                block.appendChild(mouth);
-                break;
-            case 3:
-                block.classList.add('enemy');
-                break;
-            default:
-                block.classList.add('point');
-                block.style.height = '1vh';
-                block.style.width = '1vh';
+            main.appendChild(block);
         }
-
-        main.appendChild(block);
     }
 }
+
+createMaze();
 
 //Random movement of the enemies
 const enemies = document.querySelectorAll('.enemy');
@@ -89,7 +94,7 @@ function moveEnemy(enemy) {
     let enemyDirection = Math.ceil(Math.random() * 4);
 
     // collision detection for enemy
-    setInterval(function () {
+    let timer = setInterval(function () {
         if (!startButtonClicked || gameOver) return;
 
         let canMove = false;
@@ -111,6 +116,10 @@ function moveEnemy(enemy) {
                 player.classList.add('dead');
                 gameOverMessage.style.display = 'flex';
                 gameOver = true;
+
+                for(let e of enemyTimer) {
+                    clearInterval(e);
+                }
             }
         }
 
@@ -169,6 +178,8 @@ function moveEnemy(enemy) {
             enemyDirection = Math.ceil(Math.random() * 4);
         }
     }, 10);
+enemyTimer.push(timer);
+
 }
 
 //Player movement
@@ -243,8 +254,8 @@ downBtn.addEventListener('click', function () {
 });
 
 // player 
-const player = document.querySelector('#player');
-const playerMouth = player.querySelector('.mouth');
+let player = document.querySelector('#player');
+let playerMouth = player.querySelector('.mouth');
 let playerTop = 0;
 let playerLeft = 0;
 
@@ -351,17 +362,50 @@ setInterval(function () {
     }
 }, 10);
 
+// Leaderboard
+function saveScore(tag, parent, text) {
+    const element = document.createElement(tag);
+    const textNode = document.createTextNode(text);
+    element.appendChild(textNode);
+    parent.appendChild(element);
+    return element;
+}
+
+let leaderboard = document.querySelector('.leaderboard ol');
+
+function saveName() {
+    const name = prompt("Enter your name:");
+    localStorage.setItem(name, score);
+}
+
+for (let i = 0; i < localStorage.length; i++) {
+    const name = localStorage.key(i);
+    const score = localStorage.getItem(name);
+    saveScore('li', leaderboard, `${name}: ${score}`);
+}
+
 
 //Restarting game
-document.getElementById('restart').addEventListener('click', restartGame);
-
+document.getElementById('restart').addEventListener('click', restartGame)
 function restartGame() {
     main.innerHTML = '';
     createMaze();
 
     player = document.querySelector('#player');
+    playerMouth = player.querySelector('.mouth');
     playerTop = 0;
     playerLeft = 0;
+    
+    gameOverMessage.style.display = 'none';
+    gameOver = false;
+
+    score = 0;
+    scoreDisplay.textContent = score;
+
+    const enemies = document.querySelectorAll('.enemy');
+    enemies.forEach(moveEnemy);
+
 }
+
 
 
