@@ -10,6 +10,21 @@ function startGame() {
 }
 startButton.addEventListener('click', startGame);
 
+function stopGame() {
+    gameOver = true;
+    gameOverMessage.style.display = 'flex';
+
+    upPressed = false;
+    downPressed = false;
+    leftPressed = false;
+    rightPressed = false;
+
+    setTimeout(() => {
+        saveName();
+    }, 750);
+}
+
+
 // stopping player movement after game over
 let gameOver = false;
 
@@ -114,12 +129,12 @@ function moveEnemy(enemy) {
             ) {
                 //dead animation and game over message
                 player.classList.add('dead');
-                gameOverMessage.style.display = 'flex';
-                gameOver = true;
 
-                for(let e of enemyTimer) {
+                for (let e of enemyTimer) {
                     clearInterval(e);
                 }
+                stopGame();
+
             }
         }
 
@@ -178,7 +193,7 @@ function moveEnemy(enemy) {
             enemyDirection = Math.ceil(Math.random() * 4);
         }
     }, 10);
-enemyTimer.push(timer);
+    enemyTimer.push(timer);
 
 }
 
@@ -273,8 +288,7 @@ setInterval(function () {
 
     // Check if all points are collected
     if (document.querySelectorAll('.point').length === 0) {
-        gameOverMessage.style.display = 'flex';
-        gameOver = true;
+        stopGame();
     }
 
     //Player movement with collision detection
@@ -362,6 +376,7 @@ setInterval(function () {
     }
 }, 10);
 
+
 // Leaderboard
 function saveScore(tag, parent, text) {
     const element = document.createElement(tag);
@@ -378,11 +393,24 @@ function saveName() {
     localStorage.setItem(name, score);
 }
 
-for (let i = 0; i < localStorage.length; i++) {
-    const name = localStorage.key(i);
-    const score = localStorage.getItem(name);
-    saveScore('li', leaderboard, `${name}: ${score}`);
+function updateLeaderboard() {
+    leaderboard.innerHTML = '';
+
+    let scores = [];
+    for (let i = 0; i < localStorage.length; i++) {
+        const name = localStorage.key(i);
+        const score = localStorage.getItem(name);
+        scores.push({ name, score });
+        console.log(name, score);
+    }
+    scores.sort((a, b) => b.score - a.score);
+
+    scores.slice(0, 5).forEach((score) => {
+        saveScore('li', leaderboard, `${score.name}........${score.score}`);
+    });
 }
+updateLeaderboard();
+
 
 
 //Restarting game
@@ -395,7 +423,7 @@ function restartGame() {
     playerMouth = player.querySelector('.mouth');
     playerTop = 0;
     playerLeft = 0;
-    
+
     gameOverMessage.style.display = 'none';
     gameOver = false;
 
@@ -404,6 +432,8 @@ function restartGame() {
 
     const enemies = document.querySelectorAll('.enemy');
     enemies.forEach(moveEnemy);
+
+    updateLeaderboard();
 
 }
 
