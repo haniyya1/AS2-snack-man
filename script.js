@@ -3,7 +3,6 @@ const startButton = document.querySelector('.start');
 let startButtonClicked = false;
 let enemyTimer = [];
 
-
 function startGame() {
     startButton.style.display = 'none';
     startButtonClicked = true;
@@ -23,7 +22,6 @@ function stopGame() {
         saveName();
     }, 750);
 }
-
 
 // stopping player movement after game over
 let gameOver = false;
@@ -91,12 +89,10 @@ function createMaze() {
                     block.style.height = '1vh';
                     block.style.width = '1vh';
             }
-
             main.appendChild(block);
         }
     }
 }
-
 createMaze();
 
 //Random movement of the enemies
@@ -127,6 +123,7 @@ function moveEnemy(enemy) {
                 position.bottom > enemy.top &&
                 position.top < enemy.bottom
             ) {
+
                 //dead animation and game over message
                 player.classList.add('dead');
 
@@ -134,9 +131,9 @@ function moveEnemy(enemy) {
                     clearInterval(e);
                 }
                 stopGame();
-
             }
         }
+
 
         switch (enemyDirection) {
             case 1: //down
@@ -194,7 +191,6 @@ function moveEnemy(enemy) {
         }
     }, 10);
     enemyTimer.push(timer);
-
 }
 
 //Player movement
@@ -284,7 +280,6 @@ setInterval(function () {
     // Stop player movement before and after the game
     if (!startButtonClicked || gameOver) return;  // (Open AI ChatGPT, 2023)
     let playerMoved = false;
-
 
     // Check if all points are collected
     if (document.querySelectorAll('.point').length === 0) {
@@ -403,15 +398,15 @@ function updateLeaderboard() {
         scores.push({ name, score });
         console.log(name, score);
     }
+    // sort scores in descending order
     scores.sort((a, b) => b.score - a.score);
 
+    // display top 5 scores
     scores.slice(0, 5).forEach((score) => {
         saveScore('li', leaderboard, `${score.name}........${score.score}`);
     });
 }
 updateLeaderboard();
-
-
 
 //Restarting game
 document.getElementById('restart').addEventListener('click', restartGame)
@@ -434,7 +429,21 @@ function restartGame() {
     enemies.forEach(moveEnemy);
 
     updateLeaderboard();
+}
 
+// lives
+function addLi() {
+    const li = document.createElement('li');
+    const ul = document.querySelector('.lives ul');
+    ul.appendChild(li);
+}
+addLi();
+addLi();
+addLi();
+
+function removeLi() {
+    const li = document.querySelector('.lives li');
+    li.parentNode.removeChild(li);
 }
 
 
