@@ -24,6 +24,7 @@ function stopGame() {
 }
 
 let lives = 3;
+let playerFreeze = false; // to prevent player from moving when hit by enemy
 
 // stopping player movement after game over
 let gameOver = false;
@@ -113,6 +114,7 @@ function moveEnemy(enemy) {
         let canMove = false;
         let enemyPosition = enemy.getBoundingClientRect();
 
+
         // always checking for collision
         const position = player.getBoundingClientRect();
         const enemies = document.querySelectorAll('.enemy');
@@ -133,14 +135,17 @@ function moveEnemy(enemy) {
                 playerLeft = 0;
                 player.style.top = playerTop + 'px';
                 player.style.left = playerLeft + 'px';
- 
+
                 // Hit animation 
                 if (lives > 0) {
+                    playerFreeze = true; // Prevent player movement
                     playerMouth.classList.add('hit');
                     setTimeout(function () {
                         playerMouth.classList.remove('hit');
+                        playerFreeze = false; // Allow player movement again
                         console.log('hit animation is triggered');
                     }, 1500);
+
                 } else {
                     // Death animation only when lives run out
                     player.classList.add('dead');
@@ -296,7 +301,7 @@ const gameOverMessage = document.getElementById('gameOverMessage'); //game over 
 // collision detection for player
 setInterval(function () {
     // Stop player movement before and after the game
-    if (!startButtonClicked || gameOver) return;  // (Open AI ChatGPT, 2023)
+    if (!startButtonClicked || gameOver || playerFreeze) return;  // (Open AI ChatGPT, 2023)
     let playerMoved = false;
 
     // Check if all points are collected
@@ -363,7 +368,6 @@ setInterval(function () {
             playerMoved = true;
         }
         playerMouth.classList = 'right';
-
     }
 
     //check for collision with points
