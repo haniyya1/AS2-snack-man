@@ -23,6 +23,8 @@ function stopGame() {
     }, 750);
 }
 
+let lives = 3;
+
 // stopping player movement after game over
 let gameOver = false;
 
@@ -123,17 +125,33 @@ function moveEnemy(enemy) {
                 position.bottom > enemy.top &&
                 position.top < enemy.bottom
             ) {
+                removeLi();
+                lives = lives - 1;
 
-                //dead animation and game over message
-                player.classList.add('dead');
+                // Reset player position
+                playerTop = 0;
+                playerLeft = 0;
+                player.style.top = playerTop + 'px';
+                player.style.left = playerLeft + 'px';
+ 
+                // Hit animation 
+                if (lives > 0) {
+                    playerMouth.classList.add('hit');
+                    setTimeout(function () {
+                        playerMouth.classList.remove('hit');
+                        console.log('hit animation is triggered');
+                    }, 1500);
+                } else {
+                    // Death animation only when lives run out
+                    player.classList.add('dead');
 
-                for (let e of enemyTimer) {
-                    clearInterval(e);
+                    for (let e of enemyTimer) {
+                        clearInterval(e);
+                    }
+                    stopGame();
                 }
-                stopGame();
             }
         }
-
 
         switch (enemyDirection) {
             case 1: //down
@@ -421,6 +439,13 @@ function restartGame() {
 
     gameOverMessage.style.display = 'none';
     gameOver = false;
+
+    lives = 3;
+    const ul = document.querySelector('.lives ul');
+    ul.innerHTML = '';
+    addLi();
+    addLi();
+    addLi();
 
     score = 0;
     scoreDisplay.textContent = score;
